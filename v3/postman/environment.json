@@ -4,7 +4,7 @@
 	"values": [
 		{
 			"key": "baseUrl",
-			"value": "",
+			"value": "gateway.mogior.ru",
 			"enabled": true
 		}
 	],
