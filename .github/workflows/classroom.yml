@@ -31,10 +31,15 @@ jobs:
 
       - name: Deploy
         run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          yc init
+          
+          chmod g+r ~/.kube/config
           mkdir -p '${{ github.workspace }}/.kube' \
                     && echo '${{ secrets.KUBECONFIG}}' > $KUBECONFIG
           cd k8s/charts/services
           helm upgrade app . --kubeconfig $KUBECONFIG
+          kubectl get all
           sleep 60
 
       - name: Run API Tests
