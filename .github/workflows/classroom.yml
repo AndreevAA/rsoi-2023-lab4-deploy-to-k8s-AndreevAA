@@ -31,11 +31,11 @@ jobs:
 
       - name: Deploy
         run: |
-          mkdir -p '${{ github.workspace }}/.kube' \
-                    && echo '${{ secrets.KUBECONFIG}}' > $KUBECONFIG
+          mkdir -p ${{ github.workspace }}/.kube
+          echo '${{ secrets.KUBECONFIG}}' > ${{ github.workspace }}/.kube/config
           cd k8s/charts/services
-          chmod g+r '${{ github.workspace }}/.kube/config'
-          helm upgrade app . --kubeconfig $KUBECONFIG
+          chmod g+r ${{ github.workspace }}/.kube/config
+          helm upgrade app . --kubeconfig ${{ github.workspace }}/.kube/config
           kubectl get all
           sleep 60
 
