@@ -31,10 +31,6 @@ jobs:
 
       - name: Deploy
         run: |
-          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-          yc init
-          source "/home/runner/.bashrc
-
           chmod g+r ~/.kube/config
           mkdir -p '${{ github.workspace }}/.kube' \
                     && echo '${{ secrets.KUBECONFIG}}' > $KUBECONFIG
