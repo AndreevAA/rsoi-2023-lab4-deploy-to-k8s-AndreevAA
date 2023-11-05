@@ -1,4 +1,4 @@
-domain: "andreevaa.ru"
+domain: "158.160.108.69"
 service:
   resources:
     requests:
