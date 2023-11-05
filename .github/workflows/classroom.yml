@@ -29,15 +29,46 @@ jobs:
           docker buildx build --push -t andreevaa/rsoi_rental_service:v1 -f src/rental_service/Dockerfile src/rental_service
           docker buildx build --push -t andreevaa/rsoi_payment_service:v1 -f src/payment_service/Dockerfile src/payment_service
 
-      - name: Deploy
+      # - name: Deploy
+      #   run: |
+      #     mkdir -p ${{ github.workspace }}/.kube
+      #     echo '${{ secrets.KUBECONFIG}}' > ${{ github.workspace }}/.kube/config
+      #     cd k8s/charts/services
+      #     chmod g+r ${{ github.workspace }}/.kube/config
+      #     helm upgrade app . --kubeconfig ${{ github.workspace }}/.kube/config
+      #     kubectl get all
+      #     sleep 60
+
+      - name: Prepare Kube config
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+          # KUBECONFIG_CA_FILE: '${{ secrets.KUBECONFIG_CA }}'
         run: |
-          mkdir -p ${{ github.workspace }}/.kube
-          echo '${{ secrets.KUBECONFIG}}' > ${{ github.workspace }}/.kube/config
-          cd k8s/charts/services
-          chmod g+r ${{ github.workspace }}/.kube/config
-          helm upgrade app . --kubeconfig ${{ github.workspace }}/.kube/config
-          kubectl get all
-          sleep 60
+          echo "$KUBECONFIG_FILE" > ./kube.config 
+          # echo "$KUBECONFIG_CA_FILE" > ./ca.pem 
+
+      - name: 'DB deploy'
+        run: |
+          export HELM_OPERATION=install
+          helm --kubeconfig ./kube.config status db
+          if [ $? -eq 0 ]
+            then HELM_OPERATION=upgrade
+          fi
+          helm --kubeconfig ./kube.config $HELM_OPERATION db ./k8s/postgres-chart
+      - name: 'App deploy'
+        env:
+          POSTGRES_PASSWORD: 'test'
+        run: |
+          export HELM_OPERATION=install
+          helm --kubeconfig ./kube.config status my-app
+          if [ $? -eq 0 ]
+            then HELM_OPERATION=upgrade
+          fi
+          helm --kubeconfig ./kube.config $HELM_OPERATION my-app ./k8s/my-app \
+          --set services.ticket.env.DB_DSN="host=db-service user=program password=test dbname=postgres port=5432 user=program password=$POSTGRES_PASSWORD dbname=postgres port=5432" \
+          --set services.flight.env.DB_DSN="host=db-service user=program password=test dbname=postgres port=5432 user=program password=$POSTGRES_PASSWORD dbname=flights port=5432" \
+          --set services.bonus.env.DB_DSN="host=db-service user=program password=test dbname=postgres port=5432 user=program password=$POSTGRES_PASSWORD dbname=privileges port=5432"
+
 
       - name: Run API Tests
         uses: matt-ball/newman-action@master
