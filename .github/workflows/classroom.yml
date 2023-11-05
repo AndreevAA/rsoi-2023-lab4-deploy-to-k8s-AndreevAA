@@ -47,13 +47,16 @@ jobs:
           echo "$KUBECONFIG_FILE" > ./kube.config 
           echo "$KUBECONFIG_CA_FILE" > ./ca.pem 
 
-      - name: 'Deploy'
+      - name: 'Deploy DB'
+        run: |
+          cd k8s/postgres-chart
+          helm upgrade db . --kubeconfig ../../kube.config
+          sleep 60
+
+      - name: 'Deploy App'
         run: |
           cd k8s/charts/services
-          helm install db . --kubeconfig ../../../kube.config
-          sleep 60
-          cd ../../postgres-chart
-          helm upgrade app . --kubeconfig ../../kube.config
+          helm install app . --kubeconfig ../../../kube.config
           sleep 60
 
       - name: Run API Tests
