@@ -31,7 +31,6 @@ jobs:
 
       - name: Deploy
         run: |
-          chmod g+r ~/.kube/config
           mkdir -p '${{ github.workspace }}/.kube' \
                     && echo '${{ secrets.KUBECONFIG}}' > $KUBECONFIG
           cd k8s/charts/services
