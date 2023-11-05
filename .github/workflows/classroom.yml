@@ -49,13 +49,10 @@ jobs:
 
       - name: 'DB deploy'
         run: |
-          export HELM_OPERATION=install
-          helm --kubeconfig ./kube.config status db
-          if [ $? -eq 0 ]
-            then HELM_OPERATION=upgrade
-          fi
-          helm --kubeconfig ./kube.config $HELM_OPERATION db ./k8s/postgres-chart
-          
+          cd k8s/charts/services
+          helm upgrade app . --kubeconfig $KUBECONFIG
+          sleep 60
+
       - name: 'App deploy'
         env:
           POSTGRES_PASSWORD: 'test'
