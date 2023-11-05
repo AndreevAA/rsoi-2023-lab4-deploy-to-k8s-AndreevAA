@@ -52,16 +52,9 @@ jobs:
           cd k8s/charts/services
           helm upgrade app . --kubeconfig ../../../kube.config
           sleep 60
-
-      # - name: 'App deploy'
-      #   env:
-      #     POSTGRES_PASSWORD: 'test'
-      #   run: |
-      #     helm --kubeconfig ./kube.config $HELM_OPERATION my-app ./k8s/my-app \
-      #     --set services.ticket.env.DB_DSN="host=db-service user=program password=test dbname=postgres port=5432 user=program password=$POSTGRES_PASSWORD dbname=postgres port=5432" \
-      #     --set services.flight.env.DB_DSN="host=db-service user=program password=test dbname=postgres port=5432 user=program password=$POSTGRES_PASSWORD dbname=flights port=5432" \
-      #     --set services.bonus.env.DB_DSN="host=db-service user=program password=test dbname=postgres port=5432 user=program password=$POSTGRES_PASSWORD dbname=privileges port=5432"
-
+          cd ../postgres-chart
+          helm upgrade app . --kubeconfig ../../../kube.config
+          sleep 60
 
       - name: Run API Tests
         uses: matt-ball/newman-action@master

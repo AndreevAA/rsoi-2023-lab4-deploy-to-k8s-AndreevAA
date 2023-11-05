@@ -4,7 +4,7 @@
 	"values": [
 		{
 			"key": "baseUrl",
-			"value": "gateway.mogior.ru",
+			"value": "gateway.158.160.108.69",
 			"enabled": true
 		}
 	],
