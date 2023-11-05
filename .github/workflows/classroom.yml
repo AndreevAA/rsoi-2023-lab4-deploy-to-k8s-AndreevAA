@@ -34,6 +34,7 @@ jobs:
           mkdir -p '${{ github.workspace }}/.kube' \
                     && echo '${{ secrets.KUBECONFIG}}' > $KUBECONFIG
           cd k8s/charts/services
+          chmod g+r ~/.kube/config
           helm upgrade app . --kubeconfig $KUBECONFIG
           kubectl get all
           sleep 60
