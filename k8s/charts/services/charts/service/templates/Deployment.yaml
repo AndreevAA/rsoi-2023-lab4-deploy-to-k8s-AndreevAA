@@ -36,9 +36,9 @@ spec:
             - name: DATA_BASE_USER
               value: "postgres"
             - name: DATA_BASE_PASS
-              value: "8Rvbs9i9obYzU5cv"
+              value: "postgres"
             - name: DATA_BASE_HOST
-              value: "db.lwyekailhpupnhywwptq.supabase.co"
+              value: "db-service"
             {{ end }}
             {{ if eq .Values.service.type "gateway" }}
             - name: CARS_SERVICE_HOST
