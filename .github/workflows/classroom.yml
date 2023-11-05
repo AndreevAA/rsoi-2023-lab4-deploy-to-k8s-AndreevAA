@@ -53,7 +53,7 @@ jobs:
           helm upgrade app . --kubeconfig ../../../kube.config
           sleep 60
           cd ../../postgres-chart
-          helm upgrade app . --kubeconfig ../kube.config
+          helm upgrade app . --kubeconfig ../../kube.config
           sleep 60
 
       - name: Run API Tests
