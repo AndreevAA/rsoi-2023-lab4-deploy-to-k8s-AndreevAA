@@ -55,6 +55,7 @@ jobs:
             then HELM_OPERATION=upgrade
           fi
           helm --kubeconfig ./kube.config $HELM_OPERATION db ./k8s/postgres-chart
+          
       - name: 'App deploy'
         env:
           POSTGRES_PASSWORD: 'test'
