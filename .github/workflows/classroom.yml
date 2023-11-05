@@ -49,7 +49,7 @@ jobs:
 
       - name: 'DB deploy'
         run: |
-          helm --kubeconfig ./kube.config $HELM_INSTALL db ./k8s/postgres-chart
+          helm --kubeconfig ./kube.config install db ./k8s/postgres-chart
 
       - name: 'App deploy'
         env:
