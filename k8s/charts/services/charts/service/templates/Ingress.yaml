@@ -11,13 +11,22 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: {{ .Chart.Name }}.{{ .Values.domain }}
-      http:
+    - http:
         paths:
+          {{ if eq .Chart.Name "gateway" }}
           - path: /
             pathType: Prefix
             backend:
               service:
                 name: {{ .Chart.Name }}-service
                 port:
-                  number: {{ .Values.service.port }}
+                  number: {{ .Values.service.port }}          
+          {{else }} 
+          - path: /{{ .Chart.Name }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Chart.Name }}-service
+                port:
+                  number: {{ .Values.service.port }}   
+          {{end}}
